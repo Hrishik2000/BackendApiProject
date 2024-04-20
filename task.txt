@@ -1,0 +1,12 @@
+generate mock data from mockaroo.com 
+
+REST API - JSON
+
+GET /users - HTML Document Render
+GET /api/users - List all users JSON - Done
+
+//dynamic path parameters
+GET /api/users/1 - Get the user with ID 1
+GET /api/users/2 - Get the user with ID 2
+POST /api/users - Create new user
+PATCH /api/users/1 - Edit the user with ID 1
