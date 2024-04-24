@@ -22,9 +22,9 @@ app.use((req, res, next) => {
 //   console.log(req.requestTime);
 
 
-        fs.appendFile('log.txt', `\n ${Date.now()} : ${req.method} : ${req.path}`, (err)=>{
-           next();
-        });
+        // fs.appendFile('log.txt', `\n ${Date.now()} : ${req.method} : ${req.path}`, (err)=>{
+        //    next();
+        // });
      
     next();
     //calls next middleware /forward the request 
@@ -47,7 +47,10 @@ app.get("/users", (req, res) => {
 app.get("/api/users", (req, res) => { 
     //we can set custom headers
     
-    res.setHeader('') 
+    //we can send custom headers like this
+                //HeaderKey , Value
+    res.setHeader('X-name', "hrishik") 
+
   return res.json(users);
 });
 
@@ -70,9 +73,14 @@ app.get("/api/users", (req, res) => {
 
 app.post("/api/users", (req, res) => {
     //TODO: Create new user
-    //users.body-> 
+    //users.body->
+    const body = req.body;
+
+    if(!body || body.first_name || body.last_name || body.email ||  body.gender || body.job_title){
+            res.status(400).json({ status: "all fields are required"});
+    }
     
-    const NewUserbody = {...req.body , id: users.length+1}; //req.body holds the recieved data from the from the frontend
+    const NewUserbody = {...body , id: users.length+1}; //req.body holds the recieved data from the from the frontend
     console.log('Body',NewUserbody)
     console.log(users.length);
     
@@ -82,7 +90,7 @@ app.post("/api/users", (req, res) => {
         if (err) {
             return res.status(500).json({ error: "Error writing to file" });
         }
-        return res.json({ status: 'done & new user ID is', details: NewUserbody });
+        return res.status(201).json({ status: 'done & new user ID is', details: NewUserbody });
     });
 })
 
@@ -112,7 +120,7 @@ app.route('/api/users/:id')
     if(user)
      return res.json(user);
     else
-        return res.json({status: "user not found"});
+        return res.status(404).json({status: "user not found"});
   })
 .patch( (req, res) => {
     //TODO: update user with given id
